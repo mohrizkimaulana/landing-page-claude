@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VELO — Car Rental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0d0d0d;
+      --white: #fafaf8;
+      --gray-light: #f4f4f2;
+      --gray-mid: #e2e2de;
+      --gray-text: #7a7a72;
+      --accent: #2a6e4e;
+      --accent-light: #e8f2ed;
+      --accent-hover: #1f5239;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+      --radius: 4px;
+      --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--black);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 4rem;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--gray-mid);
+      transition: padding var(--transition);
+    }
+    nav.scrolled { padding: 1rem 4rem; }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--black);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-text);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--black); }
+
+    .nav-cta {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--black);
+      border: 1px solid var(--black);
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-cta:hover { background: var(--accent); border-color: var(--accent); }
+
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { width: 24px; height: 2px; background: var(--black); transition: var(--transition); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      gap: 4rem;
+      overflow: hidden;
+    }
+
+    .hero-content { max-width: 560px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light);
+      padding: 0.35rem 0.9rem;
+      border-radius: 2rem;
+      margin-bottom: 1.8rem;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 300;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.4rem;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--gray-text);
+      font-weight: 300;
+      max-width: 420px;
+      margin-bottom: 2.4rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem; align-items: center;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .btn-primary {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.9rem 2.2rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(42,110,78,0.25); }
+
+    .btn-ghost {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: transparent;
+      border: 1px solid var(--gray-mid);
+      padding: 0.9rem 2.2rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .btn-ghost:hover { border-color: var(--black); }
+
+    .hero-stats {
+      display: flex; gap: 2.5rem;
+      margin-top: 3.5rem;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 0.15rem; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--gray-text); letter-spacing: 0.04em; }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeUp 0.9s 0.2s ease both;
+    }
+
+    .hero-car-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 12px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e8f2ed 0%, #d4e9dc 60%, #c0dfc9 100%);
+    }
+
+    .hero-car-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.6) 0%, transparent 70%);
+      z-index: 1;
+    }
+
+    /* SVG car illustration embedded */
+    .hero-car-svg {
+      position: absolute;
+      bottom: -4%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 105%;
+      z-index: 2;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.18));
+      transition: transform 0.6s ease;
+    }
+    .hero-car-wrap:hover .hero-car-svg { transform: translateX(-50%) scale(1.03); }
+
+    .hero-pill {
+      position: absolute;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--gray-mid);
+      border-radius: 2rem;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--black);
+      z-index: 10;
+      animation: float 3s ease-in-out infinite;
+    }
+    .hero-pill.p1 { top: 12%; left: -6%; animation-delay: 0s; }
+    .hero-pill.p2 { bottom: 20%; right: -6%; animation-delay: 1.2s; }
+    .hero-pill.p3 { top: 8%; right: 6%; animation-delay: 0.6s; }
+
+    .pill-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 5px; }
+
+    /* ── BOOKING FORM ── */
+    #booking {
+      background: var(--black);
+      padding: 3.5rem 4rem;
+    }
+
+    .booking-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .booking-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.4rem;
+    }
+
+    .booking-form {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1.5fr auto;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .form-group label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .form-group input, .form-group select {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      color: var(--white);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0.85rem 1.1rem;
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color var(--transition), background var(--transition);
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent);
+      background: rgba(42,110,78,0.12);
+    }
+    .form-group select option { background: #1a1a1a; color: var(--white); }
+
+    .btn-search {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+    }
+    .btn-search:hover { background: var(--accent); color: var(--white); transform: translateY(-2px); }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 7rem 4rem; }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--gray-text);
+      max-width: 480px;
+      font-weight: 300;
+    }
+    .section-header { margin-bottom: 3.5rem; }
+    .max-w { max-width: 1200px; margin: 0 auto; }
+
+    /* ── CARS ── */
+    #cars { background: var(--gray-light); }
+
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .car-card {
+      background: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--gray-mid);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .car-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+
+    .car-img {
+      width: 100%; height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f0f0ee 0%, #e8e8e4 100%);
+    }
+    .car-img svg { width: 88%; transition: transform var(--transition); }
+    .car-card:hover .car-img svg { transform: scale(1.04) translateX(4px); }
+
+    .car-body { padding: 1.5rem; }
+    .car-category {
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .car-name {
+      font-family: var(--serif);
+      font-size: 1.4rem; font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+    .car-specs {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+    .spec-item {
+      display: flex; align-items: center; gap: 0.3rem;
+      font-size: 0.78rem; color: var(--gray-text);
+    }
+    .spec-icon { font-size: 0.9rem; }
+
+    .car-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-mid);
+    }
+    .car-price { display: flex; flex-direction: column; }
+    .price-from { font-size: 0.68rem; color: var(--gray-text); letter-spacing: 0.04em; }
+    .price-val {
+      font-family: var(--serif);
+      font-size: 1.6rem; font-weight: 600; line-height: 1;
+    }
+    .price-per { font-size: 0.72rem; color: var(--gray-text); margin-left: 2px; }
+
+    .btn-rent {
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--white); background: var(--black);
+      border: 1px solid var(--black);
+      padding: 0.6rem 1.3rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .btn-rent:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ── WHY CHOOSE US ── */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+    .benefit-card {
+      padding: 2rem 1.5rem;
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .benefit-card:hover { border-color: var(--accent); box-shadow: 0 8px 30px rgba(42,110,78,0.08); }
+    .benefit-icon {
+      width: 46px; height: 46px;
+      background: var(--accent-light);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+    }
+    .benefit-title {
+      font-family: var(--serif);
+      font-size: 1.2rem; font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .benefit-text { font-size: 0.88rem; color: var(--gray-text); font-weight: 300; line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--black); color: var(--white); }
+    #how .section-title { color: var(--white); }
+    #how .section-sub { color: rgba(255,255,255,0.45); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 12.5%; right: 12.5%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), rgba(255,255,255,0.15), transparent);
+    }
+
+    .step-item { padding: 0 1.5rem; text-align: center; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif);
+      font-size: 1.3rem; font-weight: 600;
+      margin: 0 auto 1.5rem;
+      position: relative; z-index: 1;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .step-item:hover .step-num { background: var(--accent); border-color: var(--accent); }
+    .step-title {
+      font-family: var(--serif);
+      font-size: 1.2rem; font-weight: 600;
+      margin-bottom: 0.5rem; color: var(--white);
+    }
+    .step-desc { font-size: 0.85rem; color: rgba(255,255,255,0.45); font-weight: 300; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .testi-card {
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      padding: 2rem;
+      transition: border-color var(--transition);
+    }
+    .testi-card:hover { border-color: var(--accent); }
+    .testi-stars { color: var(--accent); font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 1rem; }
+    .testi-quote {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--black);
+      margin-bottom: 1.5rem;
+    }
+    .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+    .testi-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif);
+      font-size: 1rem; font-weight: 600;
+      color: var(--accent);
+    }
+    .author-name { font-size: 0.88rem; font-weight: 500; }
+    .author-loc { font-size: 0.75rem; color: var(--gray-text); }
+
+    /* ── CTA ── */
+    #cta {
+      background: linear-gradient(135deg, var(--accent) 0%, #1d5e41 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 7rem 4rem;
+    }
+    #cta .section-title { color: var(--white); max-width: 600px; margin: 0 auto 1rem; }
+    #cta .section-title em { color: rgba(255,255,255,0.7); }
+    #cta .section-sub { color: rgba(255,255,255,0.65); max-width: 420px; margin: 0 auto 2.5rem; }
+    .btn-cta-white {
+      font-family: var(--sans);
+      font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--accent); background: var(--white);
+      border: none; padding: 1rem 2.5rem;
+      border-radius: var(--radius);
+      cursor: pointer; text-decoration: none;
+      display: inline-block;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-cta-white:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      color: rgba(255,255,255,0.55);
+      padding: 4rem 4rem 2.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .nav-logo { color: var(--white); }
+    .footer-brand p {
+      font-size: 0.85rem; font-weight: 300;
+      line-height: 1.7; margin-top: 0.8rem;
+      max-width: 240px;
+    }
+    .footer-col h4 {
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.9);
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-col a {
+      font-size: 0.85rem; color: rgba(255,255,255,0.45);
+      text-decoration: none; transition: color var(--transition);
+    }
+    .footer-col a:hover { color: var(--white); }
+
+    .footer-socials { display: flex; gap: 0.8rem; margin-top: 1.2rem; }
+    .social-icon {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: border-color var(--transition), color var(--transition);
+    }
+    .social-icon:hover { border-color: var(--accent); color: var(--accent); }
+
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p { font-size: 0.78rem; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 1.2rem 2rem; }
+      #hero { padding: 7rem 2rem 4rem; gap: 2rem; }
+      section { padding: 5rem 2rem; }
+      #booking { padding: 3rem 2rem; }
+      footer { padding: 3rem 2rem 2rem; }
+      .cars-grid, .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+
+      #hero { grid-template-columns: 1fr; text-align: center; padding: 6.5rem 1.5rem 3rem; }
+      .hero-content { max-width: 100%; }
+      .hero-sub { margin: 0 auto 2rem; }
+      .hero-actions { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { display: none; }
+
+      #booking { padding: 2.5rem 1.5rem; }
+      .booking-form { grid-template-columns: 1fr 1fr; }
+      .btn-search { grid-column: span 2; }
+
+      section { padding: 4rem 1.5rem; }
+      .cars-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .steps-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .steps-grid::before { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .booking-form { grid-template-columns: 1fr; }
+      .btn-search { grid-column: span 1; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">VEL<span>O</span></a>
+  <ul class="nav-links">
+    <li><a href="#cars">Fleet</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+  </ul>
+  <a href="#booking" class="nav-cta">Book Now</a>
+  <div class="nav-hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="pill-dot"></span> Premium Car Rental</div>
+    <h1 class="hero-title">Rent a Car <em>Easily,</em><br>Anytime, Anywhere</h1>
+    <p class="hero-sub">Discover our curated fleet of premium vehicles. Simple booking, transparent pricing, and unmatched service — wherever your journey takes you.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-primary">Book Now</a>
+      <a href="#cars" class="btn-ghost">View Fleet</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">150+</span>
+        <span class="stat-label">Vehicles</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">40+</span>
+        <span class="stat-label">Cities</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">98%</span>
+        <span class="stat-label">Satisfaction</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-pill p1"><span class="pill-dot"></span> Available Now</div>
+    <div class="hero-pill p2">⭐ 4.9 Rating</div>
+    <div class="hero-pill p3">✓ Free Cancellation</div>
+    <div class="hero-car-wrap">
+      <!-- Car SVG illustration -->
+      <svg class="hero-car-svg" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <!-- Shadow -->
+        <ellipse cx="450" cy="400" rx="340" ry="22" fill="rgba(0,0,0,0.15)"/>
+        <!-- Body lower -->
+        <path d="M100 310 Q110 340 160 345 L740 345 Q790 340 800 310 L810 260 Q808 240 790 238 L700 235 L660 200 Q630 160 580 148 L360 145 Q300 147 265 180 L210 235 L110 238 Q92 240 90 260 Z" fill="#2c2c2c"/>
+        <!-- Body upper/cabin -->
+        <path d="M265 180 Q295 135 350 120 L590 120 Q645 130 670 175 L700 235 L210 235 Z" fill="#1a1a1a"/>
+        <!-- Windshield -->
+        <path d="M280 180 Q308 140 358 128 L575 128 Q622 138 648 175 L680 230 L225 230 Z" fill="#4a7c6b" fill-opacity="0.7"/>
+        <!-- Windshield glare -->
+        <path d="M320 135 L360 130 L380 170 L330 180 Z" fill="white" fill-opacity="0.2"/>
+        <!-- Roof line detail -->
+        <path d="M265 182 L210 237" stroke="#3a3a3a" stroke-width="2"/>
+        <path d="M670 175 L700 237" stroke="#3a3a3a" stroke-width="2"/>
+        <!-- Side windows -->
+        <rect x="235" y="178" width="170" height="52" rx="6" fill="#3d6b5a" fill-opacity="0.65"/>
+        <rect x="415" y="170" width="230" height="60" rx="6" fill="#3d6b5a" fill-opacity="0.65"/>
+        <!-- Door lines -->
+        <line x1="410" y1="180" x2="413" y2="340" stroke="#404040" stroke-width="1.5"/>
+        <line x1="620" y1="175" x2="622" y2="340" stroke="#404040" stroke-width="1.5"/>
+        <!-- Handles -->
+        <rect x="350" y="268" width="32" height="7" rx="3.5" fill="#555"/>
+        <rect x="550" y="265" width="32" height="7" rx="3.5" fill="#555"/>
+        <rect x="690" y="263" width="28" height="7" rx="3.5" fill="#555"/>
+        <!-- Headlights -->
+        <path d="M98 270 Q88 272 85 285 Q83 298 95 302 L135 304 L140 255 Q118 257 98 270Z" fill="#e8e8d0" fill-opacity="0.9"/>
+        <path d="M98 270 Q88 272 85 285 Q83 298 95 302 L135 304 L140 255 Q118 257 98 270Z" fill="url(#headlightGlow)" fill-opacity="0.6"/>
+        <!-- Taillights -->
+        <path d="M800 270 Q812 273 815 287 Q817 300 804 303 L764 305 L759 255 Q782 257 800 270Z" fill="#c0392b" fill-opacity="0.9"/>
+        <!-- Front bumper -->
+        <path d="M87 296 Q85 320 100 328 L155 332 L155 310 L100 308 Z" fill="#222"/>
+        <path d="M815 296 Q817 320 800 328 L744 332 L744 310 L800 308 Z" fill="#222"/>
+        <!-- Grille -->
+        <rect x="88" y="304" width="58" height="22" rx="4" fill="#181818"/>
+        <line x1="88" y1="311" x2="146" y2="311" stroke="#333" stroke-width="1"/>
+        <line x1="88" y1="318" x2="146" y2="318" stroke="#333" stroke-width="1"/>
+        <line x1="108" y1="304" x2="108" y2="326" stroke="#333" stroke-width="1"/>
+        <line x1="126" y1="304" x2="126" y2="326" stroke="#333" stroke-width="1"/>
+        <!-- Rear lights strip -->
+        <rect x="756" y="278" width="6" height="46" rx="2" fill="#e74c3c"/>
+        <!-- Body accent line -->
+        <path d="M155 285 Q300 278 450 280 Q600 278 745 285" stroke="#3d6b5a" stroke-width="2.5" stroke-opacity="0.7"/>
+        <!-- Wheel arches -->
+        <path d="M150 338 Q156 298 220 295 Q285 292 292 338Z" fill="#1a1a1a"/>
+        <path d="M608 338 Q614 298 678 295 Q743 292 750 338Z" fill="#1a1a1a"/>
+        <!-- Wheels front -->
+        <circle cx="220" cy="348" r="52" fill="#1c1c1c"/>
+        <circle cx="220" cy="348" r="40" fill="#282828"/>
+        <circle cx="220" cy="348" r="28" fill="#1a1a1a"/>
+        <circle cx="220" cy="348" r="14" fill="#3a3a3a"/>
+        <circle cx="220" cy="348" r="6" fill="#555"/>
+        <!-- Wheel spokes front -->
+        <line x1="220" y1="320" x2="220" y2="376" stroke="#444" stroke-width="4"/>
+        <line x1="192" y1="348" x2="248" y2="348" stroke="#444" stroke-width="4"/>
+        <line x1="200" y1="328" x2="240" y2="368" stroke="#444" stroke-width="3"/>
+        <line x1="240" y1="328" x2="200" y2="368" stroke="#444" stroke-width="3"/>
+        <!-- Wheel shine front -->
+        <path d="M205 330 Q212 325 220 326 Q226 327 225 333" stroke="rgba(255,255,255,0.25)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Wheels rear -->
+        <circle cx="680" cy="348" r="52" fill="#1c1c1c"/>
+        <circle cx="680" cy="348" r="40" fill="#282828"/>
+        <circle cx="680" cy="348" r="28" fill="#1a1a1a"/>
+        <circle cx="680" cy="348" r="14" fill="#3a3a3a"/>
+        <circle cx="680" cy="348" r="6" fill="#555"/>
+        <line x1="680" y1="320" x2="680" y2="376" stroke="#444" stroke-width="4"/>
+        <line x1="652" y1="348" x2="708" y2="348" stroke="#444" stroke-width="4"/>
+        <line x1="660" y1="328" x2="700" y2="368" stroke="#444" stroke-width="3"/>
+        <line x1="700" y1="328" x2="660" y2="368" stroke="#444" stroke-width="3"/>
+        <path d="M665 330 Q672 325 680 326 Q686 327 685 333" stroke="rgba(255,255,255,0.25)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <defs>
+          <radialGradient id="headlightGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffaa"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING FORM -->
+<div id="booking">
+  <div class="booking-inner">
+    <p class="booking-label">Quick Booking</p>
+    <div class="booking-form">
+      <div class="form-group">
+        <label for="location">Pickup Location</label>
+        <input type="text" id="location" placeholder="City, airport or address…"/>
+      </div>
+      <div class="form-group">
+        <label for="pickup">Pickup Date & Time</label>
+        <input type="datetime-local" id="pickup"/>
+      </div>
+      <div class="form-group">
+        <label for="return">Return Date & Time</label>
+        <input type="datetime-local" id="return"/>
+      </div>
+      <button class="btn-search" onclick="handleSearch()">Search Cars</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED CARS -->
+<section id="cars">
+  <div class="max-w">
+    <div class="section-header reveal">
+      <span class="section-tag">Our Fleet</span>
+      <h2 class="section-title">Curated <em>Vehicles</em><br>for Every Journey</h2>
+      <p class="section-sub">From city runabouts to premium SUVs — handpicked and meticulously maintained for your comfort.</p>
+    </div>
+    <div class="cars-grid">
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M50 140 Q55 158 80 162 L320 162 Q345 158 350 140 L356 115 Q354 104 344 103 L310 101 L290 82 Q272 62 248 56 L168 56 Q140 58 124 76 L98 101 L58 103 Q47 104 46 115Z" fill="#2a6e4e"/>
+            <path d="M124 76 Q140 52 168 44 L248 44 Q274 50 288 70 L310 101 L98 101 Z" fill="#1d5239"/>
+            <path d="M132 76 Q147 57 170 50 L242 50 Q264 56 276 70 L304 97 L108 97 Z" fill="#2a7a58" fill-opacity="0.5"/>
+            <path d="M152 60 L170 52 L180 80 L158 84 Z" fill="white" fill-opacity="0.12"/>
+            <rect x="112" y="74" width="76" height="24" rx="4" fill="#1d5239" fill-opacity="0.7"/>
+            <rect x="196" y="70" width="98" height="28" rx="4" fill="#1d5239" fill-opacity="0.7"/>
+            <path d="M48 127 Q46 140 54 145 L72 147 L74 112 Q62 114 48 127Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M352 127 Q354 140 346 145 L328 147 L326 112 Q338 114 352 127Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="165" r="24" fill="#1a1a1a"/><circle cx="100" cy="165" r="16" fill="#262626"/><circle cx="100" cy="165" r="8" fill="#1a1a1a"/><line x1="100" y1="149" x2="100" y2="181" stroke="#444" stroke-width="2.5"/><line x1="84" y1="165" x2="116" y2="165" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="165" r="24" fill="#1a1a1a"/><circle cx="300" cy="165" r="16" fill="#262626"/><circle cx="300" cy="165" r="8" fill="#1a1a1a"/><line x1="300" y1="149" x2="300" y2="181" stroke="#444" stroke-width="2.5"/><line x1="284" y1="165" x2="316" y2="165" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Compact SUV</p>
+          <h3 class="car-name">Audi Q5 Sport</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 5 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Automatic</span>
+            <span class="spec-item"><span class="spec-icon">⛽</span> Hybrid</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$89<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M50 140 Q55 158 80 162 L320 162 Q345 158 350 140 L356 115 Q354 104 344 103 L310 101 L290 82 Q272 62 248 56 L168 56 Q140 58 124 76 L98 101 L58 103 Q47 104 46 115Z" fill="#2c2c2c"/>
+            <path d="M124 76 Q140 52 168 44 L248 44 Q274 50 288 70 L310 101 L98 101 Z" fill="#1a1a1a"/>
+            <path d="M132 76 Q147 57 170 50 L242 50 Q264 56 276 70 L304 97 L108 97 Z" fill="#4a4a4a" fill-opacity="0.5"/>
+            <rect x="112" y="74" width="76" height="24" rx="4" fill="#222" fill-opacity="0.7"/>
+            <rect x="196" y="70" width="98" height="28" rx="4" fill="#222" fill-opacity="0.7"/>
+            <path d="M48 127 Q46 140 54 145 L72 147 L74 112 Q62 114 48 127Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M352 127 Q354 140 346 145 L328 147 L326 112 Q338 114 352 127Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="165" r="24" fill="#1a1a1a"/><circle cx="100" cy="165" r="16" fill="#262626"/><circle cx="100" cy="165" r="8" fill="#1a1a1a"/><line x1="100" y1="149" x2="100" y2="181" stroke="#444" stroke-width="2.5"/><line x1="84" y1="165" x2="116" y2="165" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="165" r="24" fill="#1a1a1a"/><circle cx="300" cy="165" r="16" fill="#262626"/><circle cx="300" cy="165" r="8" fill="#1a1a1a"/><line x1="300" y1="149" x2="300" y2="181" stroke="#444" stroke-width="2.5"/><line x1="284" y1="165" x2="316" y2="165" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Luxury Sedan</p>
+          <h3 class="car-name">BMW 5 Series</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 5 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Automatic</span>
+            <span class="spec-item"><span class="spec-icon">⛽</span> Petrol</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$115<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M48 145 Q53 162 82 166 L318 166 Q347 162 352 145 L358 118 Q356 106 345 105 L314 103 L295 82 Q278 58 252 52 L165 52 Q136 56 120 80 L95 103 L58 105 Q46 107 44 118Z" fill="#5a7fa8"/>
+            <path d="M120 80 Q138 54 166 46 L252 46 Q278 52 294 75 L314 103 L95 103 Z" fill="#3d6080"/>
+            <path d="M127 80 Q144 58 168 50 L244 50 Q266 56 280 74 L306 99 L106 99 Z" fill="#7aaad0" fill-opacity="0.4"/>
+            <rect x="108" y="77" width="78" height="23" rx="4" fill="#2d5070" fill-opacity="0.75"/>
+            <rect x="194" y="72" width="102" height="28" rx="4" fill="#2d5070" fill-opacity="0.75"/>
+            <path d="M155 57 L172 50 L182 78 L160 83 Z" fill="white" fill-opacity="0.15"/>
+            <path d="M46 130 Q44 143 52 148 L71 150 L73 114 Q61 117 46 130Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M354 130 Q356 143 348 148 L329 150 L327 114 Q339 117 354 130Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="168" r="24" fill="#1a1a1a"/><circle cx="100" cy="168" r="16" fill="#262626"/><circle cx="100" cy="168" r="8" fill="#1a1a1a"/><line x1="100" y1="152" x2="100" y2="184" stroke="#444" stroke-width="2.5"/><line x1="84" y1="168" x2="116" y2="168" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="168" r="24" fill="#1a1a1a"/><circle cx="300" cy="168" r="16" fill="#262626"/><circle cx="300" cy="168" r="8" fill="#1a1a1a"/><line x1="300" y1="152" x2="300" y2="184" stroke="#444" stroke-width="2.5"/><line x1="284" y1="168" x2="316" y2="168" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Electric SUV</p>
+          <h3 class="car-name">Tesla Model Y</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 7 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Automatic</span>
+            <span class="spec-item"><span class="spec-icon">⚡</span> Electric</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$99<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M48 145 Q53 162 82 166 L318 166 Q347 162 352 145 L358 118 Q356 106 345 105 L314 103 L295 82 Q278 58 252 52 L165 52 Q136 56 120 80 L95 103 L58 105 Q46 107 44 118Z" fill="#d4a853"/>
+            <path d="M120 80 Q138 54 166 46 L252 46 Q278 52 294 75 L314 103 L95 103 Z" fill="#a87c2a"/>
+            <path d="M127 80 Q144 58 168 50 L244 50 Q266 56 280 74 L306 99 L106 99 Z" fill="#e8c870" fill-opacity="0.4"/>
+            <rect x="108" y="77" width="78" height="23" rx="4" fill="#8a6220" fill-opacity="0.75"/>
+            <rect x="194" y="72" width="102" height="28" rx="4" fill="#8a6220" fill-opacity="0.75"/>
+            <path d="M46 130 Q44 143 52 148 L71 150 L73 114 Q61 117 46 130Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M354 130 Q356 143 348 148 L329 150 L327 114 Q339 117 354 130Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="168" r="24" fill="#1a1a1a"/><circle cx="100" cy="168" r="16" fill="#262626"/><circle cx="100" cy="168" r="8" fill="#1a1a1a"/><line x1="100" y1="152" x2="100" y2="184" stroke="#444" stroke-width="2.5"/><line x1="84" y1="168" x2="116" y2="168" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="168" r="24" fill="#1a1a1a"/><circle cx="300" cy="168" r="16" fill="#262626"/><circle cx="300" cy="168" r="8" fill="#1a1a1a"/><line x1="300" y1="152" x2="300" y2="184" stroke="#444" stroke-width="2.5"/><line x1="284" y1="168" x2="316" y2="168" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Convertible</p>
+          <h3 class="car-name">Porsche Boxster</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 2 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Manual</span>
+            <span class="spec-item"><span class="spec-icon">⛽</span> Petrol</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$175<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M48 148 Q53 165 82 170 L318 170 Q347 165 352 148 L355 122 Q353 110 342 109 L318 107 L295 88 Q276 68 252 62 L165 62 Q138 66 120 86 L98 107 L60 109 Q48 110 46 122Z" fill="#8e9eaa"/>
+            <path d="M120 86 Q140 62 165 56 L252 56 Q276 62 292 82 L318 107 L98 107 Z" fill="#6a7d8a"/>
+            <path d="M127 86 Q146 64 167 58 L244 58 Q266 64 278 80 L308 103 L106 103 Z" fill="#b0c4d0" fill-opacity="0.4"/>
+            <rect x="108" y="84" width="78" height="22" rx="4" fill="#556070" fill-opacity="0.75"/>
+            <rect x="194" y="79" width="102" height="26" rx="4" fill="#556070" fill-opacity="0.75"/>
+            <path d="M46 133 Q44 147 52 152 L71 154 L73 117 Q61 120 46 133Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M354 133 Q356 147 348 152 L329 154 L327 117 Q339 120 354 133Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="172" r="24" fill="#1a1a1a"/><circle cx="100" cy="172" r="16" fill="#262626"/><circle cx="100" cy="172" r="8" fill="#1a1a1a"/><line x1="100" y1="156" x2="100" y2="188" stroke="#444" stroke-width="2.5"/><line x1="84" y1="172" x2="116" y2="172" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="172" r="24" fill="#1a1a1a"/><circle cx="300" cy="172" r="16" fill="#262626"/><circle cx="300" cy="172" r="8" fill="#1a1a1a"/><line x1="300" y1="156" x2="300" y2="188" stroke="#444" stroke-width="2.5"/><line x1="284" y1="172" x2="316" y2="172" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Full-Size SUV</p>
+          <h3 class="car-name">Mercedes GLE</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 7 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Automatic</span>
+            <span class="spec-item"><span class="spec-icon">⛽</span> Diesel</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$145<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-card reveal">
+        <div class="car-img">
+          <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="200" cy="185" rx="160" ry="10" fill="rgba(0,0,0,0.08)"/>
+            <path d="M48 145 Q53 162 82 166 L318 166 Q347 162 352 145 L358 118 Q356 106 345 105 L314 103 L295 82 Q278 58 252 52 L165 52 Q136 56 120 80 L95 103 L58 105 Q46 107 44 118Z" fill="#c8c8c8"/>
+            <path d="M120 80 Q138 54 166 46 L252 46 Q278 52 294 75 L314 103 L95 103 Z" fill="#a0a0a0"/>
+            <path d="M127 80 Q144 58 168 50 L244 50 Q266 56 280 74 L306 99 L106 99 Z" fill="#e8e8e8" fill-opacity="0.5"/>
+            <rect x="108" y="77" width="78" height="23" rx="4" fill="#888" fill-opacity="0.75"/>
+            <rect x="194" y="72" width="102" height="28" rx="4" fill="#888" fill-opacity="0.75"/>
+            <path d="M155 57 L172 50 L182 78 L160 83 Z" fill="white" fill-opacity="0.3"/>
+            <path d="M46 130 Q44 143 52 148 L71 150 L73 114 Q61 117 46 130Z" fill="#e8e0c8" fill-opacity="0.9"/>
+            <path d="M354 130 Q356 143 348 148 L329 150 L327 114 Q339 117 354 130Z" fill="#c0392b" fill-opacity="0.9"/>
+            <circle cx="100" cy="168" r="24" fill="#1a1a1a"/><circle cx="100" cy="168" r="16" fill="#262626"/><circle cx="100" cy="168" r="8" fill="#1a1a1a"/><line x1="100" y1="152" x2="100" y2="184" stroke="#444" stroke-width="2.5"/><line x1="84" y1="168" x2="116" y2="168" stroke="#444" stroke-width="2.5"/>
+            <circle cx="300" cy="168" r="24" fill="#1a1a1a"/><circle cx="300" cy="168" r="16" fill="#262626"/><circle cx="300" cy="168" r="8" fill="#1a1a1a"/><line x1="300" y1="152" x2="300" y2="184" stroke="#444" stroke-width="2.5"/><line x1="284" y1="168" x2="316" y2="168" stroke="#444" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <div class="car-body">
+          <p class="car-category">Economy</p>
+          <h3 class="car-name">Toyota Camry</h3>
+          <div class="car-specs">
+            <span class="spec-item"><span class="spec-icon">👤</span> 5 Seats</span>
+            <span class="spec-item"><span class="spec-icon">⚙️</span> Automatic</span>
+            <span class="spec-item"><span class="spec-icon">⛽</span> Hybrid</span>
+          </div>
+          <div class="car-footer">
+            <div class="car-price">
+              <span class="price-from">From</span>
+              <span class="price-val">$55<span class="price-per">/day</span></span>
+            </div>
+            <a href="#booking" class="btn-rent">Rent Now</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section id="why">
+  <div class="max-w">
+    <div class="section-header reveal">
+      <span class="section-tag">Why Velo</span>
+      <h2 class="section-title">The Smarter Way<br>to <em>Drive</em></h2>
+      <p class="section-sub">We've rethought car rental from the ground up — so every journey starts and ends smoothly.</p>
+    </div>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal">
+        <div class="benefit-icon">💰</div>
+        <h3 class="benefit-title">Transparent Pricing</h3>
+        <p class="benefit-text">No hidden fees, no surprises. The price you see at booking is exactly what you pay — including insurance and taxes.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-icon">🚗</div>
+        <h3 class="benefit-title">Premium Fleet</h3>
+        <p class="benefit-text">Every vehicle is under 2 years old, fully serviced, and inspected before each rental. Always a fresh, reliable car.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-icon">🕐</div>
+        <h3 class="benefit-title">24/7 Support</h3>
+        <p class="benefit-text">Our team is available around the clock — by phone, chat, or email. Whatever you need, whenever you need it.</p>
+      </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-icon">✨</div>
+        <h3 class="benefit-title">Instant Booking</h3>
+        <p class="benefit-text">Reserve your vehicle in under 2 minutes. No paperwork queues, no waiting — just scan and drive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="max-w">
+    <div class="section-header reveal">
+      <span class="section-tag" style="color:rgba(255,255,255,0.45)">Process</span>
+      <h2 class="section-title">From Search<br>to <em>Drive</em> in Minutes</h2>
+      <p class="section-sub">A seamless four-step journey designed to get you on the road with minimum friction.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-item reveal">
+        <div class="step-num">01</div>
+        <h3 class="step-title">Search</h3>
+        <p class="step-desc">Enter your location, dates, and preferences to browse our available fleet.</p>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">02</div>
+        <h3 class="step-title">Choose</h3>
+        <p class="step-desc">Select the perfect vehicle from our curated collection of premium cars.</p>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">03</div>
+        <h3 class="step-title">Book</h3>
+        <p class="step-desc">Confirm your reservation instantly. Secure checkout with multiple payment options.</p>
+      </div>
+      <div class="step-item reveal">
+        <div class="step-num">04</div>
+        <h3 class="step-title">Drive</h3>
+        <p class="step-desc">Pick up your car with a seamless digital check-in and hit the open road.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="max-w">
+    <div class="section-header reveal">
+      <span class="section-tag">Reviews</span>
+      <h2 class="section-title">Trusted by<br><em>Thousands</em> of Drivers</h2>
+      <p class="section-sub">Don't just take our word for it — here's what our customers have to say.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Booked a BMW for a weekend trip and the whole process was incredibly smooth. The car was immaculate and the pickup took less than five minutes."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SR</div>
+          <div>
+            <p class="author-name">Sarah R.</p>
+            <p class="author-loc">New York, NY</p>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Finally, a rental company that doesn't hit you with surprise charges. Transparent pricing, excellent car condition, and the app made everything effortless."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MK</div>
+          <div>
+            <p class="author-name">Marcus K.</p>
+            <p class="author-loc">Los Angeles, CA</p>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"The Tesla Model Y we rented was spotless. Customer support responded within minutes when we had a question. This is how car rental should always be."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AL</div>
+          <div>
+            <p class="author-name">Anna L.</p>
+            <p class="author-loc">Chicago, IL</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="max-w" style="text-align:center;">
+    <span class="section-tag" style="color:rgba(255,255,255,0.6); background:rgba(255,255,255,0.12); padding:0.3rem 0.9rem; border-radius:2rem; display:inline-block;">Ready to Go?</span>
+    <h2 class="section-title reveal" style="margin:1rem auto;">Your Next Adventure<br>Starts <em>Right Here</em></h2>
+    <p class="section-sub reveal" style="margin: 0 auto 2.5rem;">Join over 50,000 drivers who trust VELO for their journeys. Book in minutes, drive with confidence.</p>
+    <a href="#booking" class="btn-cta-white reveal">Start Your Journey</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="max-w">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="color:var(--white)">VEL<span>O</span></a>
+        <p>Premium car rental for the modern traveler. Anywhere, anytime, at a fair price.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-icon">𝕏</a>
+          <a href="#" class="social-icon">in</a>
+          <a href="#" class="social-icon">ig</a>
+          <a href="#" class="social-icon">fb</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Rent a Car</a></li>
+          <li><a href="#">Corporate Plans</a></li>
+          <li><a href="#">Long-Term Rental</a></li>
+          <li><a href="#">Airport Pickup</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@velo.com">hello@velo.com</a></li>
+          <li><a href="tel:+18005555555">+1 800 555 5555</a></li>
+          <li><a href="#">Live Chat</a></li>
+          <li><a href="#">Support Center</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 VELO Car Rental. All rights reserved.</p>
+      <p><a href="#" style="color:rgba(255,255,255,0.35); text-decoration:none; margin-right:1.2rem;">Privacy Policy</a><a href="#" style="color:rgba(255,255,255,0.35); text-decoration:none;">Terms of Service</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Mobile nav toggle
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    const cta = document.querySelector('.nav-cta');
+    if (links) {
+      const open = links.style.display === 'flex';
+      links.style.display = open ? 'none' : 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'absolute';
+      links.style.top = '70px';
+      links.style.left = '0'; links.style.right = '0';
+      links.style.background = 'var(--white)';
+      links.style.padding = '1.5rem 2rem';
+      links.style.borderBottom = '1px solid var(--gray-mid)';
+      links.style.zIndex = '99';
+    }
+  }
+
+  // Search button feedback
+  function handleSearch() {
+    const btn = document.querySelector('.btn-search');
+    const loc = document.getElementById('location').value;
+    if (!loc.trim()) {
+      document.getElementById('location').focus();
+      document.getElementById('location').style.borderColor = '#e74c3c';
+      setTimeout(() => document.getElementById('location').style.borderColor = '', 1500);
+      return;
+    }
+    btn.textContent = 'Searching…';
+    setTimeout(() => { btn.textContent = 'Search Cars'; }, 1800);
+  }
+
+  // Set default datetimes
+  const now = new Date();
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const nextWeek = new Date(now);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  const fmt = d => d.toISOString().slice(0,16);
+  document.getElementById('pickup').value = fmt(tomorrow);
+  document.getElementById('return').value = fmt(nextWeek);
+</script>
+</body>
+</html>
